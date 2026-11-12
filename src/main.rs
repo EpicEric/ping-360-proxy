@@ -77,7 +77,13 @@ async fn main() {
             let Ok((len, addr)) = discovery_udp.recv_from(&mut buf).await else {
                 continue;
             };
-            if &buf[..len] != b"Discovery" {
+            if buf[..len].starts_with(b"SetSS1IP") {
+                println!(
+                    "SetSS1IP: Broadcast received from {addr}: {}",
+                    String::from_utf8_lossy(&buf[..len])
+                );
+                continue;
+            } else if &buf[..len] != b"Discovery" {
                 continue;
             }
             println!("Discovery: Broadcast received from {addr}");
